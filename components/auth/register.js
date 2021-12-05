@@ -1,27 +1,39 @@
 
-import React ,{useState}from 'react'
+import React ,{useEffect, useState}from 'react'
 import firebase from 'firebase'
-import {Text,TextInput,KeyboardAvoidingView,StyleSheet, TouchableOpacity} from 'react-native'
+import {Text,TextInput,KeyboardAvoidingView,StyleSheet, TouchableOpacity,Platform,Button} from 'react-native'
 
 export default function Register({navigation}) {
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
+    const [phoneNo,setPhoneNo]=useState(0)
+
+
+
 
     const onSignUp=()=>{
-        firebase.auth()
-        .createemailAndPAssword(email,password)
-        .then((result)=>{
-            firebase.firestore().collection('users')
-            .doc(firebase.auth.currentUser.uid)
-            .set({
-                name,
-                email
-            })
+
+         firebase.auth().createUserWithEmailAndPassword(email,password)
+         .then(results=>{
+             console.log("doc:",firebase.auth().currentUser.uid)
+             firebase.firestore().collection('users')
+             .doc(firebase.auth().currentUser.uid)
+             .set({
+                 name,
+                 email,
+                 phoneNo
+             })
+             .then(results=>{
+                 console.log(results)
+             }).catch((err)=>{
+                 console.log("err",err)
+             })
+          })
             .catch((error)=>{
                 console.log(error)
             })
-        })
+        }
         
     return (
 
@@ -40,24 +52,23 @@ export default function Register({navigation}) {
            style={styles.InputText}
            placeholder="Email"
            />
-            <Text style={styles.Input}>Create A Password</Text>
+            <Text style={styles.Input}>Enter A Password</Text>
            <TextInput
            value={password}
            onChangeText={(password)=>setPassword(password)}
            style={styles.InputText}
            placeholder="Password"
            secureTextEntry={true}/>
+            <Text style={styles.Input}>Enter Ur Phone#</Text>
+           <TextInput 
+           value={phoneNo}
+           onChangeText={(phoneNo)=>setPhoneNo(phoneNo)}
+           style={styles.InputText}
+           placeholder="Contact Number"
+           />
            <Button
            title="Register"
-           onPress={()=>onSignUp()}/>
-
-           <TouchableOpacity 
-           onPress={()=>navigation.navigate('Login')}
-           >
-               <Text style={{color:'blue',fontSize:16,marginTop:5}}>NEXT</Text>
-
-
-           </TouchableOpacity>
+           onPress={()=>{onSignUp()}}/>
     </KeyboardAvoidingView>
     )}
     const styles=StyleSheet.create({

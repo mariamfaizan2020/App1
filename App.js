@@ -3,9 +3,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './components/auth/login'
 import RegisterScreen from './components/auth/register'
+import SplashScreen from './components/auth/splash'
+import MainScreen from './components/Main'
+import {Provider} from 'react-redux'
+import {createStore, applyMiddleware} from 'redux'
+import rootReducer from './redux/reducers'
+import thunk from 'redux-thunk'
+const store =createStore(rootReducer,applyMiddleware())
 
-
-import firebase from "firebase";
+import  firebase from "firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCUO-CStXuflU3bqCXtgJoVYwNXzBmpNW8",
@@ -25,11 +31,17 @@ if (firebase.apps?.length === 0){
 const Stack = createNativeStackNavigator()
  export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
+    <Provider store={store}>
+       <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen name='Splash' component={SplashScreen}></Stack.Screen>
         <Stack.Screen name='Login' component={LoginScreen}></Stack.Screen>
         <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
+        <Stack.Screen name="Main" component={MainScreen}></Stack.Screen>
 
       </Stack.Navigator>
     </NavigationContainer>
+
+    </Provider>
+   
   )}
