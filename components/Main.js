@@ -12,7 +12,7 @@ const Tab = createMaterialBottomTabNavigator();
 
 export class Main extends Component {
   componentDidMount(){
-    this.props.fetchUser()
+    // this.props.fetchUser()
     // this.props.fetchUsersData()
 
   }

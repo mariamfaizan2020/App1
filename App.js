@@ -33,8 +33,8 @@ const Stack = createNativeStackNavigator()
   return (
     <Provider store={store}>
        <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen name='Splash' component={SplashScreen}></Stack.Screen>
+      <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen name='Splash' component={SplashScreen}  hearderShown={false}></Stack.Screen>
         <Stack.Screen name='Login' component={LoginScreen}></Stack.Screen>
         <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
         <Stack.Screen name="Main" component={MainScreen}></Stack.Screen>

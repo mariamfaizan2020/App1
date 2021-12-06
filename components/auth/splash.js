@@ -1,7 +1,8 @@
+import { NavigationContainer } from '@react-navigation/native'
 import React,{useState,useEffect} from 'react'
 import { StyleSheet, Text, View ,ActivityIndicator} from 'react-native'
 
-const splash = () => {
+const splash = ({navigation}) => {
     const [loader,setLoader]=useState(true)
     useEffect(()=>{
         setTimeout(() => {
@@ -15,7 +16,7 @@ const splash = () => {
         <View>
             <ActivityIndicator size={'large'}/>
             </View>
-            :null}
+            :navigation.navigate('Login')}
         </View>
     )
 }

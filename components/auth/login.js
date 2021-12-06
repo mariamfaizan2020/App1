@@ -1,26 +1,40 @@
 
 import React,{useState}from 'react'
 import firebase from 'firebase';
-
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { useDispatch } from "react-redux";
 import {Button,Text,TextInput,KeyboardAvoidingView,
-    StyleSheet, TouchableOpacity,Platform, Alert} from 'react-native'
+    StyleSheet, TouchableOpacity,Platform, Alert,View,ActivityIndicator} from 'react-native'
+    import {fetchUser} from "../../redux/actions/index"
 
-export default function login({navigation}) {
+ function login({navigation}) {
+     const dispatch=useDispatch()
     const [email,setEmail]=useState('test2@gmail.com')
     const [password,setPassword]=useState("123456")
+    const [loader,setLoader]=useState(false)
 
     const onSignIn=()=>{
+        
      firebase.auth()
       .signInWithEmailAndPassword(email,password)
       .then(userCredentials=>{
           const user=userCredentials.user
         console.log("Logged in with:",user.email)
+        dispatch(fetchUser(navigation))
+     
+        setLoader(false)
+        
+
     })
-    .catch(error=>{alert(error.message)
+    .catch(error=>{
+        setLoader(false)
+        alert(error.message)
        
     })
 }
     const validation=()=>{
+        setLoader(true)
   if(!email){return alert('Please enter email')}
   if(!password){return alert('Please enter password')}
 
@@ -28,6 +42,17 @@ export default function login({navigation}) {
     onSignIn()
              
     }
+
+    if(loader){
+        return(
+            <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <ActivityIndicator size='large' />
+        </View>
+        )
+      
+    }else{
+
+    
 return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
        
@@ -43,11 +68,20 @@ return (
        value={password}
        onChangeText={(password)=>setPassword(password)}
        secureTextEntry={true}/>
-       <Button 
-       title="Login"
-       onPress={()=>{validation();navigation.navigate('Main')}
-}
-       />
+        {
+            loader?
+            <View style={{justifyContent:'center',alignItems:'center'}}>
+                <ActivityIndicator size='large' />
+            </View>
+            : 
+            <Button 
+            title="Login"
+            onPress={()=>{validation();}
+             }
+            />
+        }
+
+     
        <TouchableOpacity  
        onPress={()=> navigation.navigate('Register')} >
          <Text style={{color:'blue',marginTop:10,padding:10}}>If you haven't Register yet then GO TO REGISTER</Text>
@@ -58,6 +92,7 @@ return (
         )
         
     }
+}
    
 
 const styles=StyleSheet.create({
@@ -87,3 +122,8 @@ const styles=StyleSheet.create({
 
             })
 
+
+     
+              
+            //   const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser},dispatch)
+              export default connect(null,{fetchUser})(login);
