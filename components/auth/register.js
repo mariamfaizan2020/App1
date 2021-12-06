@@ -7,7 +7,7 @@ export default function Register({navigation}) {
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
-    const [phoneNo,setPhoneNo]=useState(0)
+    const [phoneNo,setPhoneNo]=useState('')
 
 
 
@@ -68,7 +68,7 @@ export default function Register({navigation}) {
            />
            <Button
            title="Register"
-           onPress={()=>{onSignUp()}}/>
+           onPress={()=>{onSignUp();navigation.navigate('Login')}}/>
     </KeyboardAvoidingView>
     )}
     const styles=StyleSheet.create({

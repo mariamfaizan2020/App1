@@ -6,8 +6,8 @@ import {Button,Text,TextInput,KeyboardAvoidingView,
     StyleSheet, TouchableOpacity,Platform, Alert} from 'react-native'
 
 export default function login({navigation}) {
-    const [email,setEmail]=useState('')
-    const [password,setPassword]=useState('')
+    const [email,setEmail]=useState('test2@gmail.com')
+    const [password,setPassword]=useState("123456")
 
     const onSignIn=()=>{
      firebase.auth()
@@ -45,9 +45,7 @@ return (
        secureTextEntry={true}/>
        <Button 
        title="Login"
-       onPress={()=>
-    //    onSignIn()
-    validation()
+       onPress={()=>{validation();navigation.navigate('Main')}
 }
        />
        <TouchableOpacity  
