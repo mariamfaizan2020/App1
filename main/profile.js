@@ -6,8 +6,8 @@ import {connect} from 'react-redux'
 
 
 const profile = ({currentUser,navigation}) => {
-    const [name,setName]=useState('')
-    const [phoneNo,setPhoneNo]=useState('')
+    const [name,setName]=useState(currentUser?.name)
+    const [phoneNo,setPhoneNo]=useState(currentUser?.phoneNo)
     console.log('currentUser',currentUser)
 
     const onEdit=()=>{
@@ -40,7 +40,7 @@ const profile = ({currentUser,navigation}) => {
             </Image>
            
             <TextInput style={styles.Input}
-            placeholder={currentUser.name}
+            placeholder={name}
             value={name}
             onChangeText={(name)=>setName(name)}
             placeholderTextColor='white'/>
@@ -51,7 +51,7 @@ const profile = ({currentUser,navigation}) => {
             
           
              <TextInput style={styles.Input}
-             placeholder={currentUser.phoneNo}
+             placeholder={phoneNo}
             value={phoneNo}
             onChangeText={(phoneNo)=>setPhoneNo(phoneNo)}
             placeholderTextColor='white'/>
@@ -83,7 +83,8 @@ const styles=StyleSheet.create({
         height:'10%',
         textAlign:'center',
         backgroundColor:'#0798f2',
-        borderColor:'#0798f2'
+        borderColor:'#0798f2',
+        color:'white'
    
     
     },
