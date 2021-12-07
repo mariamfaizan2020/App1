@@ -16,7 +16,7 @@ const splash = ({navigation}) => {
         <View>
             <ActivityIndicator size={'large'}/>
             </View>
-            :navigation.navigate('Login')}
+            :null}
         </View>
     )
 }
