@@ -37,11 +37,9 @@ console.log("users",users)
            numColumns={1}
            horizontal={false}
            data={users}
-        //    keyExtractor={()=>tem.toString}
+           keyExtractor={(item)=>item.email}
            renderItem={({item})=>{
                return(
-
-               
                <View style={{backgroundColor:'lightgrey',padding:10,margin:10}}>
             <Text>Name: {item.name}</Text>
             <Text>Email:{item.email}</Text>

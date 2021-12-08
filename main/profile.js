@@ -1,29 +1,85 @@
-import React ,{useState} from 'react'
+import React ,{useState,useEffect} from 'react'
 import firebase from 'firebase'
 require('firebase/firestore')
-import {  Text,TextInput, View,Button, StyleSheet ,TouchableOpacity ,Image} from 'react-native'
+import {  Text,TextInput, View,Button, StyleSheet ,TouchableOpacity ,Image,Platform} from 'react-native'
 import {connect} from 'react-redux'
+import * as ImagePicker from 'expo-image-picker';
+import { FontAwesome } from '@expo/vector-icons'; 
+
+
+
+
 
 
 const profile = ({currentUser,navigation}) => {
     const [name,setName]=useState(currentUser?.name)
     const [phoneNo,setPhoneNo]=useState(currentUser?.phoneNo)
+    const [image, setImage] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+          if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+              alert('Sorry, we need camera roll permissions to make this work!');
+            }
+          }
+        })();
+      }, []);
+
     console.log('currentUser',currentUser)
 
     const onEdit=()=>{
         firebase.firestore()
         .collection('users')
         .doc(firebase.auth().currentUser.uid)
+        
         .update({
             name,
-            phoneNo
-        })
+            phoneNo ,
+          
+           
+               })
         .then(()=>{
 
             console.log('userUpdated')
         })
+        // firebase.firestore()
+        // .collection('users')
+        // .doc(firebase.auth().currentUser.uid)
+        // .add({
+        //     creator:firebase.auth().currentUser.uid,
+        //     image: setImage(result.uri)
+        // })
+        // .update({
+        //     name,
+        //     phoneNo ,
+        //     image
+          
+           
+        //        })
+        // .then(()=>{
+
+        //     console.log('userUpdated')
+        // })
            
     }
+    const pickImage = async () => {
+        
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.cancelled) {
+          setImage(result.uri);
+        }
+        };
+   
     
     return (
        
@@ -31,15 +87,25 @@ const profile = ({currentUser,navigation}) => {
             {/* <Text>{currentUser.name}</Text>
             <Text>{currentUser.email}</Text>
             <Text>{currentUser.phoneNo}</Text> */}
-            <Image
-            style={styles.image}
-            source={{uri:"https://www.pngwing.com/en/free-png-bbtjg"}}>
+          
+    
+      <TouchableOpacity style={styles.image}
+        onPress={()=>{pickImage()}}>
+            <View>
+            {image ? <Image source={{ uri: image }} style={styles.image} />: <FontAwesome name="user" size={150} color= '#0798f2'
+            />}
             
-
-
-            </Image>
            
-            <TextInput style={styles.Input}
+            </View>
+   
+        </TouchableOpacity>
+      
+   
+ 
+       
+
+    
+         <TextInput style={styles.Input}
             placeholder={name}
             value={name}
             onChangeText={(name)=>setName(name)}
@@ -58,7 +124,7 @@ const profile = ({currentUser,navigation}) => {
 
             <TouchableOpacity style={styles.Button}
             onPress={()=>onEdit()}>
-                <Text style={{color:'blue', fontSize:14}}>EDIT</Text>
+                <Text style={{color:'#0798f2', fontSize:14}}>EDIT</Text>
                 </TouchableOpacity>
 
           
@@ -66,6 +132,9 @@ const profile = ({currentUser,navigation}) => {
                 firebase.auth().signOut()
                 navigation.navigate('Login')
                 }}/>
+         
+           
+            
         </View>
     )
 }
@@ -89,8 +158,14 @@ const styles=StyleSheet.create({
     
     },
     image:{
-        height:'40%',
-        width:"80%"
+        height:200,
+        width:200,
+        borderWidth:5,
+        justifyContent:'center',
+        alignItems:'center',
+        borderColor:'#0798f2',
+         borderRadius:360
+
     }
 })
 const mapStateToProps=(store)=>{

@@ -17,7 +17,9 @@ const splash = ({navigation}) => {
             <ActivityIndicator size={'large'}/>
             </View>
             :null}
+            
         </View>
+       
     )
 }
 
