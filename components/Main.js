@@ -4,9 +4,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import UsersScreen from '../main/users'
 import ProfileScreen from '../main/profile'
-import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
-import {fetchUser} from "../redux/actions/index"
+// import {connect} from 'react-redux';
+// import { bindActionCreators } from 'redux';
+// import {fetchUser} from "../redux/actions/index"
 const Tab = createMaterialBottomTabNavigator();
 
 
@@ -36,13 +36,14 @@ export class Main extends Component {
       
     
 const mapStateToProps=(store)=>({
-  currentUser:store.userState.currentUser,
+  // currentUser:store.userState.currentUser,
   // users:store.usersState.users
 
 
 })
 
-const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser},dispatch)
-export default connect(mapStateToProps,mapDispatchProps)(Main);
+// const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser},dispatch)
+// export default connect(mapStateToProps,mapDispatchProps)(Main);
+export default Main
 
 

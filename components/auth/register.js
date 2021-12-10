@@ -9,6 +9,8 @@ export default function Register({navigation}) {
     const [password,setPassword]=useState('')
     const [phoneNo,setPhoneNo]=useState('')
 
+  
+
 
 
 
@@ -23,6 +25,8 @@ export default function Register({navigation}) {
                  name,
                  email,
                  phoneNo
+               
+                
              })
              .then(results=>{
                  console.log(results)

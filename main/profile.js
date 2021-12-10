@@ -1,8 +1,12 @@
 import React ,{useState,useEffect} from 'react'
 import firebase from 'firebase'
 require('firebase/firestore')
+require('firebase/firebase-storage')
 import {  Text,TextInput, View,Button, StyleSheet ,TouchableOpacity ,Image,Platform} from 'react-native'
 import {connect} from 'react-redux'
+import { bindActionCreators } from 'redux';
+import {fetchUser} from "../redux/actions/index"
+
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 
@@ -37,6 +41,7 @@ const profile = ({currentUser,navigation}) => {
         .update({
             name,
             phoneNo ,
+            image
           
            
                })
@@ -44,27 +49,10 @@ const profile = ({currentUser,navigation}) => {
 
             console.log('userUpdated')
         })
-        // firebase.firestore()
-        // .collection('users')
-        // .doc(firebase.auth().currentUser.uid)
-        // .add({
-        //     creator:firebase.auth().currentUser.uid,
-        //     image: setImage(result.uri)
-        // })
-        // .update({
-        //     name,
-        //     phoneNo ,
-        //     image
-          
-           
-        //        })
-        // .then(()=>{
-
-        //     console.log('userUpdated')
-        // })
-           
+       
     }
-    const pickImage = async () => {
+    
+    const pickAndUploadImage = async () => {
         
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -73,12 +61,59 @@ const profile = ({currentUser,navigation}) => {
           quality: 1,
         });
     
-        console.log(result);
+        console.log("uriiiiii",result);
+        // console.log('props',props)
     
         if (!result.cancelled) {
           setImage(result.uri);
         }
+        const response=await fetch(result.uri);
+        // // console.log("uirOfImage",uri);
+        const blob= await response.blob();
+
+        const task=await firebase
+        .storage()
+        .ref()
+        .child(`users/${firebase.auth().currentUser.uid}/${Math.random.toString(36)}`)
+        .put(result.uri).then(async(res)=>{
+
+            console.log("fb img",res.ref.getDownloadURL())
+            let d=await res.ref.getDownloadURL()
+            console.log("d",d)
+            return d
+        })
+        console.log("task",task)
+        firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+        .set({image:task},{merge:true})
+        
+    //    const taskProgress =snapshot =>{
+    //       console.log(`trasfered:${snapshot.bytesTransferred}`)
+
+    //   }
+    //   const taskCompleted = () =>{
+    //       snapshot.ref.getDownloadURL()
+    //       .then((snapshot)=>{
+    //           console.log(snapshot)
+
+    //       })
+    //   }
+    //   const taskError =snapshot=>{
+    //       console.log(snapshot)
+
+    //   }
+    //      task.on("state-chnaged",taskProgress,taskError,taskCompleted) 
+         
+
+    //   }
+
         };
+    //     const uploadImage=async()=>{
+    // //    const uri=
+         
+         
+        
+
+       
    
     
     return (
@@ -90,12 +125,12 @@ const profile = ({currentUser,navigation}) => {
           
     
       <TouchableOpacity style={styles.image}
-        onPress={()=>{pickImage()}}>
+        onPress={()=>{pickAndUploadImage()}}>
             <View>
-            {image ? <Image source={{ uri: image }} style={styles.image} />: <FontAwesome name="user" size={150} color= '#0798f2'
+            {image ? <Image source={{ uri: image }} style={styles.image}/> : <FontAwesome name="user" size={150} color= '#0798f2'
             />}
             
-           
+            
             </View>
    
         </TouchableOpacity>
@@ -111,9 +146,12 @@ const profile = ({currentUser,navigation}) => {
             onChangeText={(name)=>setName(name)}
             placeholderTextColor='white'/>
             
-             <TextInput editable={false} style={styles.Input}
-             placeholder={currentUser.email}
-             placeholderTextColor='#565b5e'/>
+             <TextInput editable={false}
+              style={styles.Input}
+             placeholder={'Email'}
+            value={currentUser?.email}
+             placeholderTextColor='#565b5e'
+             />
             
           
              <TextInput style={styles.Input}
@@ -174,6 +212,8 @@ const mapStateToProps=(store)=>{
         currentUser:store.userState.currentUser
 }
 }
+const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser},dispatch)
+export default connect(mapStateToProps,mapDispatchProps)(profile);
 
-export default connect(mapStateToProps,null)(profile)
+// export default connect(mapStateToProps,null)(profile)
 
