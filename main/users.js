@@ -32,22 +32,24 @@ useEffect(()=>{
 console.log("users",users)
     
     return (
-        <View style={{marginTop:20}}>
+        <View style={{marginTop:20,flex:1,flexDirection:"row"}}>
             
            <FlatList
+           
            numColumns={1}
            horizontal={false}
            data={users}
            keyExtractor={(item)=>item.email}
            renderItem={({item})=>{
+               console.log("image",item)
                return(
                <View style={{backgroundColor:'lightgrey',padding:10,margin:10}}>
             <Text>Name: {item.name}</Text>
             <Text>Email:{item.email}</Text>
             <Text>Phone :{item.phoneNo}</Text>
-            {/* <View style={{position:'absolute'}}>
-            <Image>{item.image}</Image>
-            </View> */}
+            <View style={{alignItems:'flex-end',}}>
+            {item.image ? <Image source={{ uri: item.image }} style={{width:50,height:50,borderRadius:360}} /> : <FontAwesome name="user" size={50} color= '#0798f2'/>}
+            </View>
             </View>
                )
            }}
