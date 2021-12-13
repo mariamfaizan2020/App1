@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import { StyleSheet, Text, View ,FlatList} from 'react-native'
+import { StyleSheet, Text, View ,FlatList,Image} from 'react-native'
 
 import firebase from 'firebase'
 
@@ -17,8 +17,9 @@ useEffect(()=>{
     const fetchUsers=()=>{
         firebase.firestore()
         .collection('users')
-        .get()
-        .then((snapshot)=>{
+        .onSnapshot((snapshot)=>{
+        // .get()
+        // .then((snapshot)=>{
             console.log("snapsht",snapshot)
             let users =snapshot.docs.map(doc=>{
                 const data=doc.data();
@@ -31,7 +32,7 @@ useEffect(()=>{
 console.log("users",users)
     
     return (
-        <View>
+        <View style={{marginTop:20}}>
             
            <FlatList
            numColumns={1}
@@ -44,6 +45,9 @@ console.log("users",users)
             <Text>Name: {item.name}</Text>
             <Text>Email:{item.email}</Text>
             <Text>Phone :{item.phoneNo}</Text>
+            {/* <View style={{position:'absolute'}}>
+            <Image>{item.image}</Image>
+            </View> */}
             </View>
                )
            }}

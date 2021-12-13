@@ -32,18 +32,18 @@ export class Main extends Component {
     }
 }
 
-  
+export default Main
       
     
-const mapStateToProps=(store)=>({
-  // currentUser:store.userState.currentUser,
+// const mapStateToProps=(store)=>({
+//   // currentUser:store.userState.currentUser,
   // users:store.usersState.users
 
 
-})
+// })
 
 // const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser},dispatch)
 // export default connect(mapStateToProps,mapDispatchProps)(Main);
-export default Main
+
 
 

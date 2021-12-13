@@ -7,9 +7,11 @@ export function fetchUser(navigation){
     return((dispatch)=>{
        firebase.firestore().collection("users")
        .doc(firebase.auth().currentUser.uid)
-       .get()
+       .onSnapshot((snapshot)=>{
+    //    .get()
        
-       .then((snapshot)=>{
+    //    .then((snapshot)=>{
+
            console.log("success getting dataa")
            if(snapshot.exists){
                
@@ -22,7 +24,6 @@ export function fetchUser(navigation){
            }else{
                console.log('does not exist')
            }
-       }).catch(err=>console.log("err",err))
-    })
+       })   })
 }
 

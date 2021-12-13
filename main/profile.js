@@ -7,6 +7,7 @@ import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import {fetchUser} from "../redux/actions/index"
 
+
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome } from '@expo/vector-icons'; 
 
@@ -53,6 +54,7 @@ const profile = ({currentUser,navigation}) => {
     }
     
     const pickAndUploadImage = async () => {
+   
         
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -62,54 +64,33 @@ const profile = ({currentUser,navigation}) => {
         });
     
         console.log("uriiiiii",result);
-        // console.log('props',props)
+     
     
         if (!result.cancelled) {
           setImage(result.uri);
         }
         const response=await fetch(result.uri);
-        // // console.log("uirOfImage",uri);
+       
         const blob= await response.blob();
 
         const task=await firebase
         .storage()
-        .ref()
-        .child(`users/${firebase.auth().currentUser.uid}/${Math.random.toString(36)}`)
-        .put(result.uri).then(async(res)=>{
+        .ref('users/')
+        .child(`${firebase.auth().currentUser.uid}/${Math.random.toString(36)}`)
+        .put(blob).then(async(res)=>{
 
             console.log("fb img",res.ref.getDownloadURL())
-            let d=await res.ref.getDownloadURL()
-            console.log("d",d)
-            return d
+            let imageURL=await res.ref.getDownloadURL()
+      
+            return imageURL
         })
         console.log("task",task)
         firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
         .set({image:task},{merge:true})
-        
-    //    const taskProgress =snapshot =>{
-    //       console.log(`trasfered:${snapshot.bytesTransferred}`)
-
-    //   }
-    //   const taskCompleted = () =>{
-    //       snapshot.ref.getDownloadURL()
-    //       .then((snapshot)=>{
-    //           console.log(snapshot)
-
-    //       })
-    //   }
-    //   const taskError =snapshot=>{
-    //       console.log(snapshot)
-
-    //   }
-    //      task.on("state-chnaged",taskProgress,taskError,taskCompleted) 
-         
-
-    //   }
-
+        console.log("uri1",result.uri)
+  
         };
-    //     const uploadImage=async()=>{
-    // //    const uri=
-         
+  console.log("currrrnetUseer:",currentUser.image)
          
         
 
@@ -126,8 +107,10 @@ const profile = ({currentUser,navigation}) => {
     
       <TouchableOpacity style={styles.image}
         onPress={()=>{pickAndUploadImage()}}>
+            
             <View>
-            {image ? <Image source={{ uri: image }} style={styles.image}/> : <FontAwesome name="user" size={150} color= '#0798f2'
+                
+            {currentUser.image ? <Image source={{ uri: currentUser.image }} style={styles.image}/> : <FontAwesome name="user" size={150} color= '#0798f2'
             />}
             
             
@@ -142,13 +125,14 @@ const profile = ({currentUser,navigation}) => {
     
          <TextInput style={styles.Input}
             placeholder={name}
+            
             value={name}
             onChangeText={(name)=>setName(name)}
             placeholderTextColor='white'/>
             
              <TextInput editable={false}
               style={styles.Input}
-             placeholder={'Email'}
+             placeholder={'currentUser.email'}
             value={currentUser?.email}
              placeholderTextColor='#565b5e'
              />
@@ -215,5 +199,4 @@ const mapStateToProps=(store)=>{
 const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser},dispatch)
 export default connect(mapStateToProps,mapDispatchProps)(profile);
 
-// export default connect(mapStateToProps,null)(profile)
 
