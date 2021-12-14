@@ -110,7 +110,7 @@ const profile = ({currentUser,navigation}) => {
             
             <View>
                 
-            {currentUser.image ? <Image source={{ uri: currentUser.image }} style={styles.image}/> : <FontAwesome name="user" size={150} color= '#0798f2'
+            {currentUser.image ? <Image source={{ uri: currentUser.image }} style={styles.image1}/> : <FontAwesome name="user" size={150} color= '#0798f2'
             />}
             
             
@@ -188,7 +188,17 @@ const styles=StyleSheet.create({
         borderColor:'#0798f2',
          borderRadius:360
 
-    }
+    },
+    image1:{
+      height:200,
+      width:200,
+     
+      justifyContent:'center',
+      alignItems:'center',
+   
+       borderRadius:360
+
+  }
 })
 const mapStateToProps=(store)=>{
     console.log("store",store)

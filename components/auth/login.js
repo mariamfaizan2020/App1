@@ -10,8 +10,8 @@ import {Button,Text,TextInput,KeyboardAvoidingView,
 
  function login({navigation}) {
      const dispatch=useDispatch()
-    const [email,setEmail]=useState('')
-    const [password,setPassword]=useState("")
+    const [email,setEmail]=useState('test1@gmail.com')
+    const [password,setPassword]=useState("123456")
     const [loader,setLoader]=useState(false)
 
     const onSignIn=()=>{

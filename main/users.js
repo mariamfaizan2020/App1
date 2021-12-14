@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'
-import { StyleSheet, Text, View ,FlatList,Image} from 'react-native'
+import { StyleSheet, Text, View ,FlatList,Image,TouchableOpacity} from 'react-native'
 
 import firebase from 'firebase'
 
@@ -8,7 +8,7 @@ require('firebase/firestore')
 
 
 
-const Users = () => {
+const Users = ({navigation}) => {
     const [users,setUsers]=useState([])
 useEffect(()=>{
     fetchUsers()
@@ -32,10 +32,11 @@ useEffect(()=>{
 console.log("users",users)
     
     return (
-        <View style={{marginTop:20,flex:1,flexDirection:"row"}}>
+        <View style={{marginTop:20,flex:1
+             }}>
             
-           <FlatList
-           
+           <FlatList 
+
            numColumns={1}
            horizontal={false}
            data={users}
@@ -43,14 +44,24 @@ console.log("users",users)
            renderItem={({item})=>{
                console.log("image",item)
                return(
-               <View style={{backgroundColor:'lightgrey',padding:10,margin:10}}>
-            <Text>Name: {item.name}</Text>
-            <Text>Email:{item.email}</Text>
-            <Text>Phone :{item.phoneNo}</Text>
-            <View style={{alignItems:'flex-end',}}>
-            {item.image ? <Image source={{ uri: item.image }} style={{width:50,height:50,borderRadius:360}} /> : <FontAwesome name="user" size={50} color= '#0798f2'/>}
-            </View>
-            </View>
+                   <TouchableOpacity onPress={()=>navigation.navigate('Chat')}>
+                        <View style={{backgroundColor:'lightgrey',padding:10,margin:10,flexDirection:'row'}}>
+                    <View >
+                     {item.image ? <Image source={{ uri: item.image }} style={{width:50,height:50,borderRadius:360}} /> : <FontAwesome name="user" size={50} color= '#0798f2'/>}
+                     </View>
+                   <View style={{justifyContent:'center',alignItems:'center',paddingLeft:10}}>
+                   {/* <Text> {item.name}</Text> */}
+                   <Text>{item.email}</Text>
+                   {/* <Text>{item.phoneNo}</Text> */}
+                   </View>
+                   </View>
+
+                   </TouchableOpacity>
+
+              
+           
+           
+          
                )
            }}
         
