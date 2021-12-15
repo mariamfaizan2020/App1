@@ -6,6 +6,9 @@ import {  Text,TextInput, View,Button, StyleSheet ,TouchableOpacity ,Image,Platf
 import {connect} from 'react-redux'
 import { bindActionCreators } from 'redux';
 import {fetchUser} from "../redux/actions/index"
+import { LogOut } from '../redux/actions/index'
+
+import { useDispatch } from "react-redux";
 
 
 import * as ImagePicker from 'expo-image-picker';
@@ -17,6 +20,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 
 const profile = ({currentUser,navigation}) => {
+  const dispatch=useDispatch()
     const [name,setName]=useState(currentUser?.name)
     const [phoneNo,setPhoneNo]=useState(currentUser?.phoneNo)
     const [image, setImage] = useState(null);
@@ -151,8 +155,14 @@ const profile = ({currentUser,navigation}) => {
 
           
             <Button title='logout' onPress={()=>{
-                firebase.auth().signOut()
-                navigation.navigate('Login')
+                firebase.auth().signOut().then(()=>{
+               dispatch(LogOut(navigation))
+            
+               
+                })
+           
+              
+              
                 }}/>
          
            

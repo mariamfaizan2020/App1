@@ -13,8 +13,11 @@ export const user =(state =initialState ,action)=>{
             currentUser:action.currentUser
             
         }
+        case USER_LOGOUT:
+            return initialState
+            
         default:
-            return state;
+            return initialState;
     }
     
 }

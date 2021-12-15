@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import { USER_STATE_CHANGE} from '../constants/index'
+import { USER_LOGOUT } from '../constants/index'
 
 
 export function fetchUser(navigation){
@@ -27,3 +28,12 @@ export function fetchUser(navigation){
        })   })
 }
 
+export function LogOut(navigation){
+    return((dispatch)=>{
+        
+              dispatch({type:USER_LOGOUT})
+              navigation.navigate('Login')
+            
+        
+    })
+}

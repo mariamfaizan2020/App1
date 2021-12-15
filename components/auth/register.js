@@ -24,7 +24,8 @@ export default function Register({navigation}) {
              .set({
                  name,
                  email,
-                 phoneNo
+                 phoneNo,
+                 uid:firebase.auth().currentUser.uid
                
                 
              })

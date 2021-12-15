@@ -1,5 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import { StyleSheet, Text, View ,FlatList,Image,TouchableOpacity} from 'react-native'
+import { FontAwesome } from '@expo/vector-icons'; 
 
 import firebase from 'firebase'
 
@@ -15,21 +16,36 @@ useEffect(()=>{
 },[])
 
     const fetchUsers=()=>{
-        firebase.firestore()
-        .collection('users')
-        .onSnapshot((snapshot)=>{
-        // .get()
-        // .then((snapshot)=>{
-            console.log("snapsht",snapshot)
-            let users =snapshot.docs.map(doc=>{
-                const data=doc.data();
-                return data
-            });
-            // console.log("users",data)
-            setUsers(users)
-        })
+        console.log("uis",firebase.auth().currentUser.uid)
+
+        if(firebase.auth().currentUser.uid){
+            firebase.firestore()
+            .collection('users')
+            .where("uid","!=",firebase.auth().currentUser.uid)
+    
+            // .onSnapshot((snapshot)=>{
+            .get()
+            
+            .then((snapshot)=>{
+                console.log("snapsht",snapshot)
+                let users =snapshot.docs.map(doc=>{
+                    
+                        const data=doc.data();
+                    // if(data.uid!==firebase.auth().currentUser.uid){
+                        console.log('data',data.uid)
+                        return data
+                    // }
+                  
+                });
+                // console.log("users",data)
+                setUsers(users)
+            })
+
+        }
+       
     }
 console.log("users",users)
+
     
     return (
         <View style={{marginTop:20,flex:1
