@@ -9,8 +9,21 @@ import ChatScreen from './main/chat'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import rootReducer from './redux/reducers'
+import {persistStore,persistReducer} from 'redux-persist';
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
+
+
 import thunk from 'redux-thunk'
-const store =createStore(rootReducer,applyMiddleware(thunk))
+import { PersistGate } from 'redux-persist/integration/react'
+// const store =createStore(rootReducer,applyMiddleware(thunk))
+const persistConfig={
+  key:'root',
+  storage:AsyncStorageLib,
+  timeout:null
+};
+const persistedReducer=persistReducer(persistConfig,rootReducer);
+const store=createStore(persistedReducer,applyMiddleware(thunk));
+const persistor=persistStore(store)
 
 import  firebase from "firebase";
 
@@ -31,8 +44,10 @@ if (firebase.apps?.length === 0){
 
 const Stack = createNativeStackNavigator()
  export default function App() {
+
   return (
-    <Provider store={store}>
+    <Provider store={store} >
+      <PersistGate loading={null} persistor={persistor}>
        <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash" screenOptions={{headerShown: false}}>
       <Stack.Screen name='Splash' component={SplashScreen}  ></Stack.Screen>
@@ -43,7 +58,7 @@ const Stack = createNativeStackNavigator()
 
       </Stack.Navigator>
     </NavigationContainer>
-
+    </PersistGate>
     </Provider>
    
   )}

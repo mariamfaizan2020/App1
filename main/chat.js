@@ -1,11 +1,27 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React,{useState,useCallback} from 'react'
+import { StyleSheet, Text, View ,Platform} from 'react-native'
+import { GiftedChat } from 'react-native-gifted-chat'
+
 
 const chat = () => {
+    const [messages,setMessages]=useState([]);
+
+
+    const onSend = useCallback(
+        (messages=[]) => {
+            setMessages(previousMessages=>GiftedChat.append(previousMessages,messages))
+        },
+        [],
+    )
     return (
-        <View>
-            <Text>hello there</Text>
-        </View>
+        <View style={{ flex: 1 }}>
+   <GiftedChat 
+   messages={messages}
+   onSend={messages=>onSend(messages)}/>
+   {
+      Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />
+   }
+</View>
     )
 }
 

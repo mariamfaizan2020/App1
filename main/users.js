@@ -5,6 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase'
 
 require('firebase/firestore')
+require('firebase/firebase-storage')
 
 
 
@@ -16,9 +17,9 @@ useEffect(()=>{
 },[])
 
     const fetchUsers=()=>{
-        console.log("uis",firebase.auth().currentUser.uid)
+        // console.log("uis",firebase.auth().currentUser.uid)
 
-        if(firebase.auth().currentUser.uid){
+        if(firebase.auth().currentUser){
             firebase.firestore()
             .collection('users')
             .where("uid","!=",firebase.auth().currentUser.uid)

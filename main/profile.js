@@ -94,7 +94,7 @@ const profile = ({currentUser,navigation}) => {
         console.log("uri1",result.uri)
   
         };
-  console.log("currrrnetUseer:",currentUser.image)
+  // console.log("currrrnetUseer:",currentUser.image)
          
         
 
@@ -114,7 +114,7 @@ const profile = ({currentUser,navigation}) => {
             
             <View>
                 
-            {currentUser.image ? <Image source={{ uri: currentUser.image }} style={styles.image1}/> : <FontAwesome name="user" size={150} color= '#0798f2'
+            { currentUser?.image? <Image source={{ uri: currentUser?.image}} style={styles.image1}/> : <FontAwesome name="user" size={150} color= '#0798f2'
             />}
             
             
@@ -155,10 +155,10 @@ const profile = ({currentUser,navigation}) => {
 
           
             <Button title='logout' onPress={()=>{
-                firebase.auth().signOut().then(()=>{
+                firebase.auth().signOut()
+                .then(()=>{
                dispatch(LogOut(navigation))
-            
-               
+          //  navigation.navigate('Login')
                 })
            
               
@@ -216,7 +216,7 @@ const mapStateToProps=(store)=>{
         currentUser:store.userState.currentUser
 }
 }
-const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser},dispatch)
+const mapDispatchProps=(dispatch)=>bindActionCreators({fetchUser,LogOut},dispatch)
 export default connect(mapStateToProps,mapDispatchProps)(profile);
 
 
