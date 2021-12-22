@@ -1,56 +1,62 @@
-import React,{useState,useCallback} from 'react'
-import { StyleSheet, Text, View ,Platform} from 'react-native'
+import React,{useState,useCallback,useEffect} from 'react'
+import { StyleSheet, Text, View ,Platform,KeyboardAvoidingView} from 'react-native'
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebase from 'firebase'
+
 require('firebase/firestore')
 
 
 
-const chat = () => {
+
+
+const chat = (props) => {
+
     const [messages,setMessages]=useState([]);
+    const docId=props.route.params.docId
+    const friendname=props.route.params.friendname
+    const friendUid=props.route.params.friendUid
+    console.log('DOCID:',docId)
+    console.log('props',props)
 
+   useEffect(()=>{
+       fetchMessages()
+   },[])
 
+    const fetchMessages=()=>{
+        firebase.firestore().collection('conversation')
+        .doc(docId)
+        .collection('messages')
+        .get()
+        .then((snapshot)=>{
+           
+            if(!snapshot.empty){
+                console.log('snapss1:',snapshot)
+                const messages=snapshot.docs.map(doc=>{
+                   const data=doc.data()
+                   console.log("data:",doc.data())
+                   return data
+                })
+            }
+           
+        })
+    }
+        
     const onSend = useCallback(
         (messages=[]) => {
             setMessages(previousMessages=>GiftedChat.append(previousMessages,messages));
-            firebase.firestore()
-            .collection('conversation')
+            const {text}=messages[0];
+            firebase.firestore().collection('conversation')
+            .doc(docId)
+            .collection('messages')
             .add({
-                cid:'',
-                createdAt:'',
-                lastMessage:'',
-                lastMessageTime:'',
-                parties:{
-
-                },
-                partyIds:{
-
-                },
-                partyInfo:{
-
-                },
-                UserId:{
-
-                }
-
+                createdAt:new Date(),
+                text:text,
+                sender:firebase.auth().currentUser.uid
             })
-            .then((snapshot)=>{
-                console.log("snapshoot",snapshot)
-                let conversation =snapshot.docs.map(doc=>{
-                    const data=doc.data();
-                      console.log('data111',data.uid)
-                        return data
-
+            .then((res)=>{
+                console.log('messageID',res)
             })
-           .doc(data.uid)
-           .collection('messages')
-                   .add({
-                    createdAt: new Date(),
-                    sender:firebase.auth().currentUser?.uid,
-                    text:'',
-                   })
-    
-                })
+      
 
            
            

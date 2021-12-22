@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react'
 import { StyleSheet, Text, View ,FlatList,Image,TouchableOpacity} from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'; 
 import {connect} from 'react-redux'
+import { Entypo } from '@expo/vector-icons'; 
 
 import firebase from 'firebase'
 
@@ -61,7 +62,9 @@ useEffect(()=>{
                         docId:snapshot.docs[0].id,
                         friendname:item.name,
                         friendUid:item.uid
+                       
                     })
+                    console.log('DOCID:',friendname)
                 }else{
                     firebase.firestore()
                     .collection('conversation')
@@ -108,13 +111,6 @@ useEffect(()=>{
               
            
         })
-            // .doc(data.uid)
-            // .collection('messages')
-            // .add({
-            //     createdAt: new Date(),
-            //         sender:firebase.auth().currentUser?.uid,
-            //         text:'',
-            // })
             
            
         }
@@ -144,11 +140,11 @@ console.log("currentUser",currentUser)
                     <View >
                      {item.image ? <Image source={{ uri: item.image }} style={{width:50,height:50,borderRadius:360}} /> : <FontAwesome name="user" size={50} color= '#0798f2'/>}
                      </View>
-                   <View style={{justifyContent:'center',alignItems:'center',paddingLeft:10}}>
+                   <View style={{ flex:1,justifyContent:'center',alignItems:'flex-start',paddingLeft:10}}>
                    {/* <Text> {item.name}</Text> */}
-                   <Text>{item.email}</Text>
-                   <TouchableOpacity onPress={()=>{createConv(item)}}>
-                   <Text>Chat</Text>
+                   <Text style={{marginTop:15}}>{item.email}</Text>
+                   <TouchableOpacity onPress={()=>{createConv(item)}} style={{alignSelf:'flex-end'}}>
+                   <Entypo name="chat" size={24} color="black" />
                        </TouchableOpacity>
                  
                    {/* <Text>{item.phoneNo}</Text> */}
