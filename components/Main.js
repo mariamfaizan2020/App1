@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import UsersScreen from '../main/users'
 import ProfileScreen from '../main/profile'
+import chatScreen from '../main/chat'
 // import {connect} from 'react-redux';
 // import { bindActionCreators } from 'redux';
 // import {fetchUser} from "../redux/actions/index"
@@ -22,10 +23,8 @@ export class Main extends Component {
     
       <Tab.Navigator>
       <Tab.Screen name="Users" component={UsersScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen}
-
-       
-      />
+      <Tab.Screen name="Profile" component={ProfileScreen}/>
+      <Tab.Screen name="Chat" component={chatScreen}/>
     </Tab.Navigator>
 
   )

@@ -1,86 +1,81 @@
-import React,{useState,useCallback,useEffect} from 'react'
-import { StyleSheet, Text, View ,Platform,KeyboardAvoidingView} from 'react-native'
-import { GiftedChat } from 'react-native-gifted-chat'
+import React ,{useEffect,useState}from 'react'
+import { StyleSheet, Text, View ,Image,FlatList} from 'react-native'
 import firebase from 'firebase'
 
-require('firebase/firestore')
+require ('firebase/firestore')
 
-
-
-
-
-const chat = (props) => {
-
-    const [messages,setMessages]=useState([]);
-    const docId=props.route.params.docId
-    const friendname=props.route.params.friendname
-    const friendUid=props.route.params.friendUid
-    console.log('DOCID:',docId)
-    console.log('props',props)
-
-   useEffect(()=>{
-       fetchMessages()
-   },[])
-
-    const fetchMessages=()=>{
-        firebase.firestore().collection('conversation')
-        .doc(docId)
-        .collection('messages')
-        .get()
-        .then((snapshot)=>{
-           
-            if(!snapshot.empty){
-                console.log('snapss1:',snapshot)
-                const messages=snapshot.docs.map(doc=>{
-                   const data=doc.data()
-                   console.log("data:",doc.data())
-                   return data
-                })
-            }
-           
-        })
-    }
+const chat = () => {
+    const [conv,setConv]=useState([])
+    useEffect(() => {
+        fetchConv()
         
-    const onSend = useCallback(
-        (messages=[]) => {
-            setMessages(previousMessages=>GiftedChat.append(previousMessages,messages));
-            const {text}=messages[0];
+    }, [])
+    console.log('helo there')
+    const fetchConv=()=>{
+        if(firebase.auth().currentUser){
             firebase.firestore().collection('conversation')
-            .doc(docId)
-            .collection('messages')
-            .add({
-                createdAt:new Date(),
-                text:text,
-                sender:firebase.auth().currentUser.uid
-            })
-            .then((res)=>{
-                console.log('messageID',res)
-            })
-      
+            .where(`parties.${firebase.auth().currentUser?.uid}`,'==',true)
+            .get()
+            .then((snapshot)=>{
+                console.log('chats',snapshot)
+                if(!snapshot.empty){
+                    const conv=snapshot.docs.map((doc=>{
+                       const data=doc.data()
+                    //    let partyInfo=object.values(data.partyInfo)
+                       console.log('data',data.partyInfo)
+                            return data
+                    }))
+                    setConv(conv)
+                    console.log("image",conv)
 
-           
-           
-        },
-        [],
-    )
-    return (
-        <View style={{ flex: 1 }}>
-   <GiftedChat 
-   messages={messages}
-   onSend={messages=>onSend(messages)}
-   user={{
-    _id:firebase.auth().currentUser?.uid,
-    name:firebase.auth().currentUser?.name,
-
-   }} />
+                }
+                   
+            
+               
+            })
+        }
+       
+    } 
+    if(conv.length !== 0){
+        console.log('conv',conv)
    
-   {
-      Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />
-   }
-</View>
-    )
-}
+        return (
+           
+            <View>
+                
+                <FlatList
+                // numColumns={1}
+                data={conv}
+                keyExtractor={(item,index)=>index.toString()}
+                renderItem={({item})=>{
+                    // console.log('convsss',item.partyInfo)
+                   
+                    return(
+                   
+                   <View>
+                      <Text>name:</Text>
+                   </View>
+                        
+                    )
+     
+                }}
+                
+     
+                />
+            </View>
+         )
+    }
+return (
+    <Text>NO CHATS TO SHOW</Text>
+)
+    
+    }
+   
+    
+       
 
 export default chat
+
+const styles = StyleSheet.create({})
 
 

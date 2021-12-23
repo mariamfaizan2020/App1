@@ -5,7 +5,7 @@ import LoginScreen from './components/auth/login'
 import RegisterScreen from './components/auth/register'
 import SplashScreen from './components/auth/splash'
 import MainScreen from './components/Main'
-import ChatScreen from './main/chat'
+import messagesScreen from './main/messages'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import rootReducer from './redux/reducers'
@@ -54,7 +54,7 @@ const Stack = createNativeStackNavigator()
         <Stack.Screen name='Login' component={LoginScreen}></Stack.Screen> 
         <Stack.Screen name="Register" component={RegisterScreen} ></Stack.Screen>
         <Stack.Screen name="Main" component={MainScreen} ></Stack.Screen>
-        <Stack.Screen name="Chat" component={ChatScreen} options={{headerShown:true,title:''}} ></Stack.Screen>
+        <Stack.Screen name="messages" component={messagesScreen} options={{headerShown:true,title:''}} ></Stack.Screen>
 
       </Stack.Navigator>
     </NavigationContainer>

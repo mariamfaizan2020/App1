@@ -58,7 +58,7 @@ useEffect(()=>{
             .then((snapshot)=>{
                 if(!snapshot.empty){
                     console.log('snap:',snapshot)
-                    navigation.navigate('Chat',{
+                    navigation.navigate('messages',{
                         docId:snapshot.docs[0].id,
                         friendname:item.name,
                         friendUid:item.uid
