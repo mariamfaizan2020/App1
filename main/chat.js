@@ -1,11 +1,15 @@
 import React ,{useEffect,useState}from 'react'
-import { StyleSheet, Text, View ,Image,FlatList} from 'react-native'
+import { StyleSheet, Text, View ,FlatList,TouchableOpacity} from 'react-native'
 import firebase from 'firebase'
+
+
+
 
 require ('firebase/firestore')
 
-const chat = () => {
-    const [conv,setConv]=useState([])
+const chat = ({navigation,currentUser}) => {
+ 
+    const [name,setName]=useState([])
     useEffect(() => {
         fetchConv()
         
@@ -15,59 +19,86 @@ const chat = () => {
         if(firebase.auth().currentUser){
             firebase.firestore().collection('conversation')
             .where(`parties.${firebase.auth().currentUser?.uid}`,'==',true)
-            .get()
-            .then((snapshot)=>{
+            
+           .onSnapshot((snapshot)=>{
                 console.log('chats',snapshot)
                 if(!snapshot.empty){
+                    let arr=[]
                     const conv=snapshot.docs.map((doc=>{
                        const data=doc.data()
-                    //    let partyInfo=object.values(data.partyInfo)
-                       console.log('data',data.partyInfo)
-                            return data
-                    }))
-                    setConv(conv)
-                    console.log("image",conv)
+             console.log('cid',data.cid)
+                 
+                  Object.values(data.partyInfo).map(object=>{
+                        //   console.log('obj',object.name)
+                          if(object.uid!==firebase.auth().currentUser.uid){
+                            //   console.log(object.uid,'uid')
+                              console.log(object,'obj')
+                              let obj={
+                                  name:object.name,
+                                  uid:object.uid,
+                                  cid:data.cid
+                              }
+                              arr.push(obj)
+                          
+                          }
+                          setName(arr)
+             
+                   })
+                         
+                  
+                 }))
+           
 
                 }
                    
             
                
             })
-        }
+            }
        
     } 
-    if(conv.length !== 0){
-        console.log('conv',conv)
+    console.log("names",name)
+    console.log('abcd')
+  
    
         return (
            
-            <View>
+            <View style={{marginTop:50,flex:1}}>
                 
-                <FlatList
-                // numColumns={1}
-                data={conv}
-                keyExtractor={(item,index)=>index.toString()}
-                renderItem={({item})=>{
-                    // console.log('convsss',item.partyInfo)
+                {name.length>0 ? 
+           
                    
-                    return(
+               
+                 <FlatList
+                 // numColumns={1}
+                 data={name}
+                 keyExtractor={(item,index)=>index.toString()}
+                 renderItem={({item})=>{
+                     // console.log('convsss',item.partyInfo)
+                    
+                     return(
+                        <TouchableOpacity onPress={()=>navigation.navigate('messages',{
+                            docId:item.cid
+                             })} style={{}}>
+                         <View style={{margin:10,backgroundColor:'lightgrey',padding:10}}>
+                   <Text style={{padding:10}}>{item.name}</Text>
                    
-                   <View>
-                      <Text>name:</Text>
                    </View>
-                        
-                    )
-     
-                }}
-                
-     
-                />
-            </View>
+                   </TouchableOpacity> 
+              
+                      ) }}
+                 />
+                  
+               
+            : 
+               <Text>NO CHATS TO SHOW</Text>
+            }
+                 </View>
+               
+           
          )
-    }
-return (
-    <Text>NO CHATS TO SHOW</Text>
-)
+    
+
     
     }
    

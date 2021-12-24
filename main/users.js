@@ -64,7 +64,7 @@ useEffect(()=>{
                         friendUid:item.uid
                        
                     })
-                    console.log('DOCID:',friendname)
+                    // console.log('DOCID:',friendname)
                 }else{
                     firebase.firestore()
                     .collection('conversation')

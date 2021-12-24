@@ -15,8 +15,9 @@ const messages = (props) => {
     const docId=props.route.params.docId
     const friendname=props.route.params.friendname
     const friendUid=props.route.params.friendUid
-    console.log('DOCID:',docId)
-    console.log('props',props)
+    // console.log('DOCID:',docId)
+    // console.log('props',props)
+    console.log("144444444",props.route.params)
 
    useLayoutEffect(()=>{
        fetchMessages()
