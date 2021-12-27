@@ -4,7 +4,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import {connect} from 'react-redux'
 import { Entypo } from '@expo/vector-icons'; 
 
+
 import firebase from 'firebase'
+import { NavigationContainer } from '@react-navigation/native';
 
 require('firebase/firestore')
 require('firebase/firebase-storage')
@@ -71,8 +73,7 @@ useEffect(()=>{
                     .add({
                     
                         createdAt: new Date(),
-                        // lastMessage:'',
-                        // lastMessageTime:'',
+                     
                         parties:{
                            [`${item.uid}`]:true,
                            [`${currentUser.uid}`]:true, 
@@ -117,8 +118,8 @@ useEffect(()=>{
 
         
        
-console.log("users",users)
-console.log("users",props)
+console.log("userppps",users)
+console.log("prps",props)
 console.log("currentUser",currentUser)
 
     
@@ -135,8 +136,15 @@ console.log("currentUser",currentUser)
            renderItem={({item})=>{
                console.log("image",item)
                return(
-                   
-                        <View style={{backgroundColor:'lightgrey',padding:10,margin:10,flexDirection:'row'}}>
+                   <TouchableOpacity onPress= {()=>navigation.navigate('usersProfile',{
+                    //    friendUid:item.uid,
+                    //    friendname:item.name,
+                    //    friendPhoneNo:item.phoneNo,
+                    //    friendEmail:item.email,
+                    //    friendImage:item.image
+                    data:item
+                    } )}>
+                          <View style={{backgroundColor:'lightgrey',padding:10,margin:10,flexDirection:'row'}}>
                     <View >
                      {item.image ? <Image source={{ uri: item.image }} style={{width:50,height:50,borderRadius:360}} /> : <FontAwesome name="user" size={50} color= '#0798f2'/>}
                      </View>
@@ -151,6 +159,8 @@ console.log("currentUser",currentUser)
                    </View>
                    </View>
 
+                   </TouchableOpacity>
+                     
                  
 
               

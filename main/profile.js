@@ -128,9 +128,9 @@ const profile = ({currentUser,navigation}) => {
 
     
          <TextInput style={styles.Input}
-            placeholder={name}
+           
             
-            value={name}
+            value={currentUser?.name}
             onChangeText={(name)=>setName(name)}
             placeholderTextColor='white'/>
             
@@ -143,8 +143,8 @@ const profile = ({currentUser,navigation}) => {
             
           
              <TextInput style={styles.Input}
-             placeholder={phoneNo}
-            value={phoneNo}
+            //  placeholder={phoneNo}
+            value={currentUser?.phoneNo}
             onChangeText={(phoneNo)=>setPhoneNo(phoneNo)}
             placeholderTextColor='white'/>
 

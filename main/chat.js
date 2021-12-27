@@ -13,8 +13,8 @@ const chat = ({navigation,currentUser}) => {
     useEffect(() => {
         fetchConv()
         
-    }, [])
-    console.log('helo there')
+    }, [currentUser])
+    // console.log('helo there')
     const fetchConv=()=>{
         if(firebase.auth().currentUser){
             firebase.firestore().collection('conversation')
@@ -26,25 +26,30 @@ const chat = ({navigation,currentUser}) => {
                     let arr=[]
                     const conv=snapshot.docs.map((doc=>{
                        const data=doc.data()
-             console.log('cid',data.cid)
+            //  console.log('cid',data.LastMessage)
                  
+                //   var test=
                   Object.values(data.partyInfo).map(object=>{
                         //   console.log('obj',object.name)
                           if(object.uid!==firebase.auth().currentUser.uid){
                             //   console.log(object.uid,'uid')
-                              console.log(object,'obj')
+                            //   console.log(object,'obj')
                               let obj={
                                   name:object.name,
                                   uid:object.uid,
-                                  cid:data.cid
+                                  cid:data.cid,
+                                  LastMessage:data.LastMessage
                               }
                               arr.push(obj)
                           
                           }
-                          setName(arr)
+                        //   return arr
+                        
              
                    })
-                         
+                   setName(arr)
+                //    console.log("test",test)
+                //    setName(test[0])
                   
                  }))
            
@@ -57,8 +62,9 @@ const chat = ({navigation,currentUser}) => {
             }
        
     } 
+    console.log("names",name.length)
     console.log("names",name)
-    console.log('abcd')
+    // console.log('abcd')
   
    
         return (
@@ -74,14 +80,15 @@ const chat = ({navigation,currentUser}) => {
                  data={name}
                  keyExtractor={(item,index)=>index.toString()}
                  renderItem={({item})=>{
-                     // console.log('convsss',item.partyInfo)
+                     console.log('convsss',item)
                     
                      return(
                         <TouchableOpacity onPress={()=>navigation.navigate('messages',{
                             docId:item.cid
                              })} style={{}}>
-                         <View style={{margin:10,backgroundColor:'lightgrey',padding:10}}>
-                   <Text style={{padding:10}}>{item.name}</Text>
+                         <View style={{margin:5,backgroundColor:'lightgrey',padding:10}}>
+                   <Text style={{fontWeight:'bold'}}>{item.name}</Text>
+                   <Text style={{fontSize:12}}>{item?.LastMessage}</Text>
                    
                    </View>
                    </TouchableOpacity> 

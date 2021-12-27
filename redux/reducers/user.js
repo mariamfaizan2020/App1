@@ -17,7 +17,13 @@ export const user =(state =initialState ,action)=>{
             return initialState
             
         default:
-            return initialState;
+            return {
+                currentUser:null,
+            }
+
+             
+            
+           
     }
     
 }

@@ -6,11 +6,13 @@ import RegisterScreen from './components/auth/register'
 import SplashScreen from './components/auth/splash'
 import MainScreen from './components/Main'
 import messagesScreen from './main/messages'
+import usersProfileScreen from './main/usersProfile'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
 import rootReducer from './redux/reducers'
 import {persistStore,persistReducer} from 'redux-persist';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+
 
 
 import thunk from 'redux-thunk'
@@ -55,6 +57,7 @@ const Stack = createNativeStackNavigator()
         <Stack.Screen name="Register" component={RegisterScreen} ></Stack.Screen>
         <Stack.Screen name="Main" component={MainScreen} ></Stack.Screen>
         <Stack.Screen name="messages" component={messagesScreen} options={{headerShown:true,title:''}} ></Stack.Screen>
+        <Stack.Screen name="usersProfile" component={usersProfileScreen} options={{headerShown:true,title:''}} ></Stack.Screen>
 
       </Stack.Navigator>
     </NavigationContainer>

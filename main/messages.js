@@ -29,18 +29,17 @@ const messages = (props) => {
         .collection('messages')
         .orderBy('createdAt','desc')
         .onSnapshot((snapshot)=>{
-            // setMessages(
+      
                 let arr=[]
             snapshot.docs.map((doc)=>{
                 let obj={
                 _id:doc.data()._id,
                 createdAt:doc.data().createdAt.toDate(),
                 text:doc.data().text,
-                // user:doc.data().user
+             
                 user: {
                     _id: doc.data().sender,
-                    // name: friendname,
-                    // avatar: 'https://placeimg.com/140/140/any',
+                    
                   }
                 }
                 arr.push(obj)
@@ -51,20 +50,7 @@ const messages = (props) => {
         }
         
         )
-        // return fetchMessages;
-        // .get()
-        // .then((snapshot)=>{
-           
-        //     if(!snapshot.empty){
-        //         console.log('snapss1:',snapshot)
-        //         const messages=snapshot.docs.map(doc=>{
-        //            const data=doc.data()
-        //            console.log("data:",doc.data())
-        //            return data
-        //         })
-        //     }
-           
-        // })
+     
     }
         
     const onSend = useCallback(
@@ -80,7 +66,12 @@ const messages = (props) => {
                 sender:firebase.auth().currentUser.uid
             })
             .then((res)=>{
-                console.log('messageID',res)
+                firebase.firestore().collection('conversation')
+                .doc(docId)
+                .update({
+                    LastMessage:text,
+                    createdAt:new Date()
+                })
             })
       
 
@@ -94,9 +85,10 @@ const messages = (props) => {
    <GiftedChat 
    messages={messages}
    onSend={messages=>onSend(messages)}
+   renderUsernameOnMessage={true}
    user={{
     _id:firebase.auth().currentUser?.uid,
-    // name:firebase.auth().currentUser?.name,
+    name:firebase.auth().currentUser?.name
     
 
    }} />
