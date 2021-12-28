@@ -6,7 +6,7 @@ import { Entypo } from '@expo/vector-icons';
 
 
 import firebase from 'firebase'
-import { NavigationContainer } from '@react-navigation/native';
+
 
 require('firebase/firestore')
 require('firebase/firebase-storage')
@@ -46,7 +46,7 @@ useEffect(()=>{
                 // console.log("users",data)
                 setUsers(users)
             })
-
+           
         }
        
     }
@@ -63,8 +63,8 @@ useEffect(()=>{
                     navigation.navigate('messages',{
                         docId:snapshot.docs[0].id,
                         friendname:item.name,
-                        friendUid:item.uid
-                       
+                        friendUid:item.uid,
+                  
                     })
                     // console.log('DOCID:',friendname)
                 }else{
@@ -132,17 +132,12 @@ console.log("currentUser",currentUser)
            numColumns={1}
            horizontal={false}
            data={users}
-           keyExtractor={(item)=>item.email}
+           keyExtractor={(item,index)=>index.toString()}
            renderItem={({item})=>{
                console.log("image",item)
                return(
                    <TouchableOpacity onPress= {()=>navigation.navigate('usersProfile',{
-                    //    friendUid:item.uid,
-                    //    friendname:item.name,
-                    //    friendPhoneNo:item.phoneNo,
-                    //    friendEmail:item.email,
-                    //    friendImage:item.image
-                    data:item
+                      data:item
                     } )}>
                           <View style={{backgroundColor:'lightgrey',padding:10,margin:10,flexDirection:'row'}}>
                     <View >

@@ -24,7 +24,7 @@ const chat = ({navigation,currentUser}) => {
                 console.log('chats',snapshot)
                 if(!snapshot.empty){
                     let arr=[]
-                    const conv=snapshot.docs.map((doc=>{
+                    snapshot.docs.map((doc=>{
                        const data=doc.data()
             //  console.log('cid',data.LastMessage)
                  
@@ -38,7 +38,9 @@ const chat = ({navigation,currentUser}) => {
                                   name:object.name,
                                   uid:object.uid,
                                   cid:data.cid,
-                                  LastMessage:data.LastMessage
+                                  LastMessage:data.LastMessage,
+                            
+        
                               }
                               arr.push(obj)
                           
@@ -84,7 +86,9 @@ const chat = ({navigation,currentUser}) => {
                     
                      return(
                         <TouchableOpacity onPress={()=>navigation.navigate('messages',{
-                            docId:item.cid
+                            docId:item.cid,
+                            friendname:item.name,
+                            friendUid:item.uid
                              })} style={{}}>
                          <View style={{margin:5,backgroundColor:'lightgrey',padding:10}}>
                    <Text style={{fontWeight:'bold'}}>{item.name}</Text>

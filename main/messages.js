@@ -1,7 +1,9 @@
 import React,{useState,useCallback,useLayoutEffect} from 'react'
-import { StyleSheet, Text, View ,Platform,KeyboardAvoidingView} from 'react-native'
+import { HeaderCustom ,StyleSheet, Text, View ,Platform,KeyboardAvoidingView} from 'react-native'
 import { GiftedChat } from 'react-native-gifted-chat'
 import firebase from 'firebase'
+import CustomHeader from './customHeader'
+
 
 require('firebase/firestore')
 
@@ -32,6 +34,7 @@ const messages = (props) => {
       
                 let arr=[]
             snapshot.docs.map((doc)=>{
+                console.log('doc',doc.data())
                 let obj={
                 _id:doc.data()._id,
                 createdAt:doc.data().createdAt.toDate(),
@@ -39,6 +42,7 @@ const messages = (props) => {
              
                 user: {
                     _id: doc.data().sender,
+                    name:doc.data().name
                     
                   }
                 }
@@ -82,14 +86,14 @@ const messages = (props) => {
     )
     return (
         <View style={{ flex: 1 }}>
+           {/* <CustomHeader name={{friendname}}/> */}
    <GiftedChat 
    messages={messages}
    onSend={messages=>onSend(messages)}
-   renderUsernameOnMessage={true}
+//    renderUsernameOnMessage={true}
    user={{
     _id:firebase.auth().currentUser?.uid,
-    name:firebase.auth().currentUser?.name
-    
+//    name:firebase.auth().currentUser?.name
 
    }} />
    

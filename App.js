@@ -5,7 +5,7 @@ import LoginScreen from './components/auth/login'
 import RegisterScreen from './components/auth/register'
 import SplashScreen from './components/auth/splash'
 import MainScreen from './components/Main'
-import messagesScreen from './main/messages'
+import MessagesScreen from './main/messages'
 import usersProfileScreen from './main/usersProfile'
 import {Provider} from 'react-redux'
 import {createStore, applyMiddleware} from 'redux'
@@ -28,6 +28,7 @@ const store=createStore(persistedReducer,applyMiddleware(thunk));
 const persistor=persistStore(store)
 
 import  firebase from "firebase";
+import { user } from './redux/reducers/user';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCUO-CStXuflU3bqCXtgJoVYwNXzBmpNW8",
@@ -56,7 +57,7 @@ const Stack = createNativeStackNavigator()
         <Stack.Screen name='Login' component={LoginScreen}></Stack.Screen> 
         <Stack.Screen name="Register" component={RegisterScreen} ></Stack.Screen>
         <Stack.Screen name="Main" component={MainScreen} ></Stack.Screen>
-        <Stack.Screen name="messages" component={messagesScreen} options={{headerShown:true,title:''}} ></Stack.Screen>
+        <Stack.Screen name="messages" component={MessagesScreen} options={{headerShown:true,title:''}}/> 
         <Stack.Screen name="usersProfile" component={usersProfileScreen} options={{headerShown:true,title:''}} ></Stack.Screen>
 
       </Stack.Navigator>
