@@ -18,7 +18,7 @@ const Users = ({navigation,currentUser},props) => {
     const [users,setUsers]=useState([])
 useEffect(()=>{
     fetchUsers()
-},[currentUser])
+},[])
 
     const fetchUsers=()=>{
         // console.log("uis",firebase.auth().currentUser)

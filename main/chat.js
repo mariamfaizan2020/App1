@@ -30,7 +30,7 @@ const chat = ({navigation,currentUser}) => {
                  
                 //   var test=
                   Object.values(data.partyInfo).map(object=>{
-                        //   console.log('obj',object.name)
+                          console.log('obj',object)
                           if(object.uid!==firebase.auth().currentUser.uid){
                             //   console.log(object.uid,'uid')
                             //   console.log(object,'obj')

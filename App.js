@@ -57,8 +57,8 @@ const Stack = createNativeStackNavigator()
         <Stack.Screen name='Login' component={LoginScreen}></Stack.Screen> 
         <Stack.Screen name="Register" component={RegisterScreen} ></Stack.Screen>
         <Stack.Screen name="Main" component={MainScreen} ></Stack.Screen>
-        <Stack.Screen name="messages" component={MessagesScreen} options={{headerShown:true,title:''}}/> 
-        <Stack.Screen name="usersProfile" component={usersProfileScreen} options={{headerShown:true,title:''}} ></Stack.Screen>
+        <Stack.Screen name="messages" component={MessagesScreen} options={({route})=>({title:route.params.friendname,headerShown :true,headerBackTitleVisible: false})}/> 
+        <Stack.Screen name="usersProfile" component={usersProfileScreen} options={{headerShown:true,headerBackTitleVisible:false,title:""}} ></Stack.Screen>
 
       </Stack.Navigator>
     </NavigationContainer>
