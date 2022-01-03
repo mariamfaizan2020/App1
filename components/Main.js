@@ -5,8 +5,8 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import UsersScreen from '../main/users'
 import ProfileScreen from '../main/profile'
 import chatScreen from '../main/chat'
-import { Entypo } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons'; 
+import { Entypo,AntDesign } from '@expo/vector-icons'; 
+ 
 
 
 // import {connect} from 'react-redux';

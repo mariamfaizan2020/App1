@@ -1,18 +1,24 @@
 import React,{useState,useCallback,useLayoutEffect} from 'react'
-import { HeaderCustom ,StyleSheet, Text, View ,Platform,KeyboardAvoidingView} from 'react-native'
-import { GiftedChat } from 'react-native-gifted-chat'
+import { View ,Platform,KeyboardAvoidingView} from 'react-native'
+import { GiftedChat ,Bubble,Actions} from 'react-native-gifted-chat'
+import {Ionicons} from '@expo/vector-icons'
+
+import * as ImagePicker from 'expo-image-picker';
 import firebase from 'firebase'
-
-
-
+import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
 require('firebase/firestore')
 
 
 
 
 
-const messages = (props) => {
 
+
+
+
+
+const messages = (props) => {
+    const [image,setImage]=useState(null)
     const [messages,setMessages]=useState([]);
     const docId=props.route.params.docId
     const friendname=props.route.params.friendname
@@ -56,6 +62,69 @@ const messages = (props) => {
         )
      
     }
+    const renderActions=(props)=>(
+
+    <Actions
+        {...props} 
+        containerStyle={{
+        position:'absolute',
+        right:50,
+        bottom:2,
+        zIndex:9999
+        }}
+      onPressActionButton={HandlePhotoPicker}
+        icon={()=>{
+            return(
+                <Ionicons name='camera' size={25} color='black'/>    
+            )
+            
+        }}
+        
+        />
+        )
+        const sendImage=()=>{
+            const message={
+                _id:imageURL,
+                text:"",
+                createdAt:new Date(),
+                user:{
+                    _id: doc.data().sender,
+                    name:doc.data().name
+                },
+                image:image
+            }
+        }
+        const  HandlePhotoPicker=async ()=>{
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [1, 1],
+                quality: 1,
+              });
+          
+              console.log("uriiiiii",result.uri);
+
+              if(!result.cancelled){
+                  setImage(result.uri)
+                  await sendImage(image)
+              }
+              const response=await fetch(result.uri)
+              const blob=await response.blob()
+              const task= await firebase
+              .storage()
+              .ref('messages/')
+              .child(`${docId}/${Math.random.toString(36)}`)
+              .put(blob)
+              .then(async(res)=>{
+               
+                let imageURL=await res.ref.getDownloadURL()
+                console.log('image',imageURL)
+                return imageURL
+               
+              })
+            }
+             
+    
         
     const onSend = useCallback(
         (messages=[]) => {
@@ -80,13 +149,22 @@ const messages = (props) => {
      },
         [],
     )
-    console.log('MESSAGE',messages)
+   
+    
     return (
         <View style={{ flex: 1 }}>
-           {/* <CustomHeader name={{friendname}}/> */}
+       
    <GiftedChat 
+
+//    renderTicks={(props)=>(renderTicks())}
+    renderActions={renderActions}
    messages={messages}
    onSend={messages=>onSend(messages)}
+   renderBubble={(props)=>(
+   <Bubble
+   {...props}
+   textStyle={{right:{color:'white'}}}
+   wrapperStyle={{right:{backgroundColor:'#42f5c5'}}}/>)}
    
    user={{
     _id:firebase.auth().currentUser?.uid,

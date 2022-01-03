@@ -21,7 +21,7 @@ useEffect(()=>{
 },[])
 
     const fetchUsers=()=>{
-        // console.log("uis",firebase.auth().currentUser)
+        console.log("uis",firebase.auth().currentUser)
 //
         if(firebase.auth().currentUser){
             console.log("uid",firebase.auth().currentUser)
