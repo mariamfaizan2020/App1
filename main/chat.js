@@ -21,7 +21,7 @@ const chat = ({navigation,currentUser}) => {
             .where(`parties.${firebase.auth().currentUser?.uid}`,'==',true)
             
            .onSnapshot((snapshot)=>{
-                console.log('chats',snapshot)
+                // console.log('chats',snapshot)
                 if(!snapshot.empty){
                     let arr=[]
                     snapshot.docs.map((doc=>{
@@ -30,7 +30,7 @@ const chat = ({navigation,currentUser}) => {
                  
                 //   var test=
                   Object.values(data.partyInfo).map(object=>{
-                          console.log('obj',object)
+                        //   console.log('obj',object)
                           if(object.uid!==firebase.auth().currentUser.uid){
                             //   console.log(object.uid,'uid')
                             //   console.log(object,'obj')
@@ -64,8 +64,8 @@ const chat = ({navigation,currentUser}) => {
             }
        
     } 
-    console.log("names",name.length)
-    console.log("names",name)
+    // console.log("names",name.length)
+    // console.log("names",name)
     // console.log('abcd')
   
    

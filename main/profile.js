@@ -36,7 +36,7 @@ const profile = ({currentUser,navigation}) => {
         })();
       }, []);
 
-    console.log('currentUser',currentUser)
+    // console.log('currentUser',currentUser)
 
     const onEdit=()=>{
         firebase.firestore()
@@ -52,7 +52,7 @@ const profile = ({currentUser,navigation}) => {
                })
         .then(()=>{
 
-            console.log('userUpdated')
+            // console.log('userUpdated')
         })
        
     }
@@ -82,16 +82,18 @@ const profile = ({currentUser,navigation}) => {
         .ref('users/')
         .child(`${firebase.auth().currentUser.uid}/${Math.random.toString(36)}`)
         .put(blob).then(async(res)=>{
+          // console.log('res',res)
 
-            console.log("fb img",res.ref.getDownloadURL())
+            // console.log("fb img",res.ref.getDownloadURL())
             let imageURL=await res.ref.getDownloadURL()
-      
+      // console.log('imageeee',imageURL)
             return imageURL
+           
         })
-        console.log("task",task)
+        // console.log("task",task)
         firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
         .set({image:task},{merge:true})
-        console.log("uri1",result.uri)
+        // console.log("uri1",result.uri)
   
         };
   // console.log("currrrnetUseer:",currentUser.image)

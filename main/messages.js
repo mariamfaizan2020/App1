@@ -1,11 +1,11 @@
 import React,{useState,useCallback,useLayoutEffect} from 'react'
-import { View ,Platform,KeyboardAvoidingView} from 'react-native'
+import { View ,Platform,KeyboardAvoidingView,Image} from 'react-native'
 import { GiftedChat ,Bubble,Actions} from 'react-native-gifted-chat'
 import {Ionicons} from '@expo/vector-icons'
 
 import * as ImagePicker from 'expo-image-picker';
 import firebase from 'firebase'
-import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
+
 require('firebase/firestore')
 
 
@@ -40,12 +40,12 @@ const messages = (props) => {
       
                 let arr=[]
             snapshot.docs.map((doc)=>{
-                console.log('doc',doc.data())
+                // console.log('doc',doc.data())
                 let obj={
                 _id:Math.random(),
                 createdAt:doc.data().createdAt.toDate(),
-                text:doc.data().text,
-             
+                text:doc.data().text? doc.data().text:"",
+                image:doc.data().image ?doc.data().image :"",
                 user: {
                     _id: doc.data().sender,
                     name:doc.data().name
@@ -62,6 +62,8 @@ const messages = (props) => {
         )
      
     }
+    
+     
     const renderActions=(props)=>(
 
     <Actions
@@ -77,23 +79,12 @@ const messages = (props) => {
             return(
                 <Ionicons name='camera' size={25} color='black'/>    
             )
-            
-        }}
-        
-        />
+         
+        }}/>
+       
         )
-        const sendImage=()=>{
-            const message={
-                _id:imageURL,
-                text:"",
-                createdAt:new Date(),
-                user:{
-                    _id: doc.data().sender,
-                    name:doc.data().name
-                },
-                image:image
-            }
-        }
+       
+        
         const  HandlePhotoPicker=async ()=>{
             let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -105,61 +96,93 @@ const messages = (props) => {
               console.log("uriiiiii",result.uri);
 
               if(!result.cancelled){
-                  setImage(result.uri)
-                  await sendImage(image)
-              }
-              const response=await fetch(result.uri)
-              const blob=await response.blob()
-              const task= await firebase
-              .storage()
-              .ref('messages/')
-              .child(`${docId}/${Math.random.toString(36)}`)
-              .put(blob)
-              .then(async(res)=>{
+                const path=`${docId}/${Math.random.toString(36)}`
+                const response=await fetch(result.uri)
+                const blob=await response.blob()
+                const task= await firebase
+                .storage()
+                .ref('messages/')
+                .child(path)
+                .put(blob)
+                .then(async(res)=>{
                
-                let imageURL=await res.ref.getDownloadURL()
-                console.log('image',imageURL)
-                return imageURL
-               
-              })
-            }
-             
-    
+                  console.log('res',res)
         
-    const onSend = useCallback(
-        (messages=[]) => {
-           
-            const {text}=messages[0];
-            firebase.firestore().collection('conversation')
-            .doc(docId)
-            .collection('messages')
-            .add({
-                createdAt:new Date(),
-                text:text,
-                sender:firebase.auth().currentUser.uid
-            })
-            .then((res)=>{
-                firebase.firestore().collection('conversation')
-                .doc(docId)
-                .update({
-                    LastMessage:text,
-                    createdAt:new Date()
+                  console.log("fb img",res.ref.getDownloadURL())
+                  let imageURL=await res.ref.getDownloadURL()
+                  console.log('image',imageURL)
+                  return imageURL
+                
                 })
-            })
-     },
-        [],
-    )
+              
+                setImage(task)
+                console.log('URL:',task)
+                
+              } 
+            
+            console.log('iamge:::',image)
+            }
+              
+             
+      
+       
+   
+       
+           
+          
+          
+                
+        
+
+               
+      
+
+
+ const onSend=()=>{
+//  useCallback(
+    (messages=[],img) => {
+        console.log("ons send")
+         const {text}=messages[0];
+         console.log("msg",messages[0])
+         firebase.firestore().collection('conversation')
+         .doc(docId)
+         .collection('messages')
+         .add({
+             createdAt:new Date(),
+             text:text,
+             sender:firebase.auth().currentUser.uid,
+             image:image
+          
+            
+         })
+         .then((res)=>{
+             firebase.firestore().collection('conversation')
+             .doc(docId)
+             .update({
+                 LastMessage:text,
+                 createdAt:new Date()
+             })
+         })
+        }
+        // ,
+    
+        // [],)
+ }
+
    
     
     return (
         <View style={{ flex: 1 }}>
        
    <GiftedChat 
+   alwaysShowSend
 
 //    renderTicks={(props)=>(renderTicks())}
     renderActions={renderActions}
    messages={messages}
-   onSend={messages=>onSend(messages)}
+//    onSend= {messages=>{image? onImageSend(image):onSend(messages)}}
+onSend={messages=>onSend(messages,image)}
+   
    renderBubble={(props)=>(
    <Bubble
    {...props}
