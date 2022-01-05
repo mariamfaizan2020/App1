@@ -138,8 +138,10 @@ const messages = (props) => {
       
 
 
- const onSend=()=>{
-//  useCallback(
+ const onSend= 
+
+ 
+ useCallback(
     (messages=[],img) => {
         console.log("ons send")
          const {text}=messages[0];
@@ -164,11 +166,12 @@ const messages = (props) => {
              })
          })
         }
-        // ,
+        ,
     
-        // [],)
- }
-
+        [],
+    
+        )
+   
    
     
     return (
@@ -177,7 +180,7 @@ const messages = (props) => {
    <GiftedChat 
    alwaysShowSend
 
-//    renderTicks={(props)=>(renderTicks())}
+   renderUsernameOnMessage
     renderActions={renderActions}
    messages={messages}
 //    onSend= {messages=>{image? onImageSend(image):onSend(messages)}}
