@@ -43,7 +43,7 @@ const firebaseConfig = {
 if (firebase.apps?.length === 0){
   firebase.initializeApp(firebaseConfig)
 }
-
+console.disableYellowBox=true
 
 const Stack = createNativeStackNavigator()
  export default function App() {

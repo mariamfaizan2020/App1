@@ -1,10 +1,11 @@
 import React,{useState,useCallback,useLayoutEffect} from 'react'
-import { View ,Platform,KeyboardAvoidingView,Image} from 'react-native'
+import { View ,Platform,KeyboardAvoidingView,Image,TouchableOpacity} from 'react-native'
 import { GiftedChat ,Bubble,Actions} from 'react-native-gifted-chat'
 import {Ionicons} from '@expo/vector-icons'
 
 import * as ImagePicker from 'expo-image-picker';
 import firebase from 'firebase'
+
 
 require('firebase/firestore')
 
@@ -23,8 +24,7 @@ const messages = (props) => {
     const docId=props.route.params.docId
     const friendname=props.route.params.friendname
     const friendUid=props.route.params.friendUid
-    // console.log('DOCID:',docId)
-    // console.log('props',props)
+    
     console.log("144444444",props.route.params)
 
    useLayoutEffect(()=>{
@@ -40,7 +40,7 @@ const messages = (props) => {
       
                 let arr=[]
             snapshot.docs.map((doc)=>{
-                // console.log('doc',doc.data())
+            
                 let obj={
                 _id:Math.random(),
                 createdAt:doc.data().createdAt.toDate(),
@@ -56,9 +56,9 @@ const messages = (props) => {
               
             })
             setMessages(arr)
-            
+            // appendMessages(messages)
         }
-        
+       
         )
      
     }
@@ -116,61 +116,62 @@ const messages = (props) => {
                 })
               
                 setImage(task)
-                console.log('URL:',task)
+        
                 
               } 
             
             console.log('iamge:::',image)
             }
               
-             
-      
+   
        
    
        
            
-          
-          
-                
-        
+const  appendMessages = useCallback(
+    (messages)=>{
+        setMessages((previousMessages)=>
+        GiftedChat.append(previousMessages,messages))
 
-               
+    },[]
+)      
+
+ const onSend= useCallback(
+     (messages=[])=>{
+
+  
+    console.log("mesg",messages)
+    console.log("props",props)
+
+   const  {text,image}=messages[0]
+
+    firebase.firestore().collection('conversation')
+     .doc(docId)
+     .collection('messages')
+     .add({
+         createdAt:new Date(),
+         text:text,
+         sender:firebase.auth().currentUser.uid,
+         image:image? image:null
       
-
-
- const onSend= 
-
- 
- useCallback(
-    (messages=[],img) => {
-        console.log("ons send")
-         const {text}=messages[0];
-         console.log("msg",messages[0])
+         
+     })
+     .then((res)=>{
          firebase.firestore().collection('conversation')
          .doc(docId)
-         .collection('messages')
-         .add({
-             createdAt:new Date(),
-             text:text,
-             sender:firebase.auth().currentUser.uid,
-             image:image
-          
-            
+         .update({
+             LastMessage:text,
+             createdAt:new Date()
          })
-         .then((res)=>{
-             firebase.firestore().collection('conversation')
-             .doc(docId)
-             .update({
-                 LastMessage:text,
-                 createdAt:new Date()
-             })
-         })
-        }
-        ,
+     })
     
-        [],
+    }
+   
+     ,[]
+ )
     
-        )
+       
+    
    
    
     
@@ -179,19 +180,51 @@ const messages = (props) => {
        
    <GiftedChat 
    alwaysShowSend
-
-   renderUsernameOnMessage
-    renderActions={renderActions}
+   renderActions={renderActions}
    messages={messages}
-//    onSend= {messages=>{image? onImageSend(image):onSend(messages)}}
-onSend={messages=>onSend(messages,image)}
-   
-   renderBubble={(props)=>(
-   <Bubble
-   {...props}
-   textStyle={{right:{color:'white'}}}
-   wrapperStyle={{right:{backgroundColor:'#42f5c5'}}}/>)}
-   
+   onSend={messages => onSend(messages)}
+// onSend=
+//    {props=>{
+//        console.log("props12",props)
+//     // const {text,messageIdGenerator,user}= props
+//     const  {text,image,messageIdGenerator,user}=props[0]
+//        onSend({
+//                         createdAt:new Date(),
+//                             text:text,
+//                         sender:firebase.auth().currentUser.uid,
+//                         image:image
+//                        })
+//    }}
+   renderSend={(props)=>{
+       const {text,messageIdGenerator,user,onSend}= props
+       return(
+           <TouchableOpacity 
+           style={{
+               height:40,
+               width:40,
+               borderRadius:40,
+               backgroundColor:'#0798f2',
+               alignItems:'center',
+               justifyContent:'center',
+               marginBottom:5}}
+               onPress={()=>{
+                onSend({
+                    createdAt:new Date(),
+                    text:text?text:"",
+                    sender:firebase.auth().currentUser.uid,
+                    image:image?image:""
+                   })
+                //    if(text && onSend){
+                      
+                //     }
+                    
+                      
+               }}
+               >
+               <Ionicons name="send" size={20} color='white'/>
+           </TouchableOpacity>
+       )
+   }}
    user={{
     _id:firebase.auth().currentUser?.uid,
 
